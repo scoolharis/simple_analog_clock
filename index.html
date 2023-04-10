@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analog Clock</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="clock" width="300" height="300"></canvas>
+
+    <script>
+        var canvas = document.getElementById("clock");
+        var ctx = canvas.getContext("2d");
+        var radius = canvas.width / 2;
+
+        function drawClock() {
+            // Draw clock face
+            ctx.beginPath();
+            ctx.arc(radius, radius, radius - 5, 0, 2 * Math.PI);
+            ctx.fillStyle = "white";
+            ctx.fill();
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "black";
+            ctx.stroke();
+
+            // Draw hour markers
+            for (var i = 1; i <= 12; i++) {
+                var angle = i * Math.PI / 6;
+                ctx.beginPath();
+                ctx.lineWidth = 3;
+                ctx.moveTo(radius + Math.sin(angle) * (radius - 20), radius - Math.cos(angle) * (radius - 20));
+                ctx.lineTo(radius + Math.sin(angle) * (radius - 10), radius - Math.cos(angle) * (radius - 10));
+                ctx.stroke();
+            }
+
+            // Draw hour hand
+            var hour = new Date().getHours() % 12;
+            var hourAngle = (hour * Math.PI / 6) + (new Date().getMinutes() * Math.PI / 360) + (new Date().getSeconds() * Math.PI / 21600);
+            ctx.beginPath();
+            ctx.lineWidth = 7;
+            ctx.moveTo(radius, radius);
+            ctx.lineTo(radius + Math.sin(hourAngle) * (radius - 60), radius - Math.cos(hourAngle) * (radius - 60));
+            ctx.stroke();
+
+            // Draw minute hand
+            var minute = new Date().getMinutes();
+            var minuteAngle = (minute * Math.PI / 30) + (new Date().getSeconds() * Math.PI / 1800);
+            ctx.beginPath();
+            ctx.lineWidth = 5;
+            ctx.moveTo(radius, radius);
+            ctx.lineTo(radius + Math.sin(minuteAngle) * (radius - 40), radius - Math.cos(minuteAngle) * (radius - 40));
+            ctx.stroke();
+
+            // Draw second hand
+            var second = new Date().getSeconds();
+            var secondAngle = second * Math.PI / 30;
+            ctx.beginPath();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "red";
+            ctx.moveTo(radius, radius);
+            ctx.lineTo(radius + Math.sin(secondAngle) * (radius - 20), radius - Math.cos(secondAngle) * (radius - 20));
+            ctx.stroke();
+        }
+
+        setInterval(drawClock, 1000);
+    </script>
+</body>
+</html>
